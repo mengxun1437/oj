@@ -1,0 +1,24 @@
+server:
+  port: 8082
+
+spring:
+  devtools:
+    restart:
+      enabled: true
+  datasource:
+    url: jdbc:mysql://localhost:3306/oj
+    username: oj
+    password: xiR8SZrmLjF5BKA5
+    driver-class-name: com.mysql.jdbc.Driver
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+  servlet:
+    multipart:
+      max-request-size: 200MB
+      max-file-size: 200MB
+
+
+
+
