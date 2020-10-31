@@ -38,7 +38,7 @@ public class StudentController {
                 return Response.error("姓名或密码为空");
             }
 
-            if (name.length()<6||name.length()>20){
+            if (name.length()<2||name.length()>6){
                 return Response.error("用户名长度不合法");
             }
 
@@ -97,7 +97,7 @@ public class StudentController {
                 return Response.error("姓名或密码为空");
             }
 
-            if (name.length()<6||name.length()>20){
+            if (name.length()<2||name.length()>6){
                 return Response.error("用户名长度不合法");
             }
 
