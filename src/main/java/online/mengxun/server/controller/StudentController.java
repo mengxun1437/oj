@@ -181,6 +181,7 @@ public class StudentController {
                 }else if (studentRepository.findByName(jsonObject.getString("name")).size()!=0){
                     return Response.error("用户名已被注册");
                 }
+
                 student.setName(jsonObject.getString("name"));
             }
             if (!check.noKey(jsonObject, "password")) {
