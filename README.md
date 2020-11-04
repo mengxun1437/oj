@@ -109,6 +109,94 @@
 }
 ```
 
+#### 1.3通过id获取教师的具体信息
+
+###### 接口：[GET]http://mengxun.online/api/oj/teacher/{id}
+
+例：http://mengxun.online/api/oj/teacher/5322611b-3fb9-4c3d-adf9-af57f1fbe066
+
+###### 返回结果[正确]
+
+```json
+{
+    "code": 0,
+    "msg": "success",
+    "data": {
+        "Email": null,
+        "UpdateAt": "2020-11-04T06:48:42.000+0000",
+        "CreateAt": "2020-11-04T06:48:42.000+0000",
+        "Sex": null,
+        "ID": "5322611b-3fb9-4c3d-adf9-af57f1fbe066",
+        "Age": null,
+        "Name": "wang"
+    }
+}
+```
+
+###### 返回结果[错误]
+
+```json
+{
+    "code": 40000,
+    "msg": "提供的教师id不存在",
+    "data": null
+}
+```
+
+#### 1.4修改教师的某些信息
+
+###### 注意：账号2-6位，密码6-20位，性别{0,1}，年龄[10,60]
+
+###### 接口：[PATCH]http://mengxun.online/api/oj/teacher/{id}
+
+例： http://mengxun.online/api/oj/teacher/5322611b-3fb9-4c3d-adf9-af57f1fbe066 
+
+*说明：需要修改哪些信息，就在json数据中传哪些信息*
+
+###### 正确示例：假设只需修改密码
+
+```json
+{
+    "password":"wangwujun"
+}
+```
+
+###### 返回结果：
+
+```json
+{
+    "code": 0,
+    "msg": "教师信息修改成功",
+    "data": {
+        "Email": null,
+        "UpdateAt": "2020-11-04T06:56:14.423+0000",
+        "CreateAt": "2020-11-04T06:48:42.000+0000",
+        "Sex": 0,
+        "ID": "5322611b-3fb9-4c3d-adf9-af57f1fbe066",
+        "Age": 18,
+        "Name": "wujun1"
+    }
+}
+```
+
+###### 错误示例：
+
+```json
+{
+    "password":"wa"
+}
+```
+
+###### 返回结果：
+
+```json
+{
+    "code": 40000,
+    "msg": "用户密码长度错误",
+    "data": null
+}
+```
+
 
 
 ### 二.学生
@@ -207,6 +295,90 @@
 {
     "code": 40000,
     "msg": "用户密码错误",
+    "data": null
+}
+```
+
+#### 2.3通过id获取学生的具体信息
+
+###### 接口：[GET]http://mengxun.online/api/oj/student/{id}
+
+例：http://mengxun.online/api/oj/student/4a379f0a-28ae-4937-9fc4-c5366bb6cb76
+
+###### 返回结果[正确]
+
+```json
+{
+    "code": 0,
+    "msg": "success",
+    "data": {
+        "Email": null,
+        "UpdateAt": "2020-11-04T06:59:42.000+0000",
+        "CreateAt": "2020-11-04T06:59:42.000+0000",
+        "ID": "4a379f0a-28ae-4937-9fc4-c5366bb6cb76",
+        "Name": "hahaha"
+    }
+}
+```
+
+###### 返回结果[错误]
+
+```json
+{
+    "code": 40000,
+    "msg": "提供的学生id不存在",
+    "data": null
+}
+```
+
+#### 2.4修改学生的某些信息
+
+###### 注意：账号2-6位，密码6-20位
+
+###### 接口：[PATCH]http://mengxun.online/api/oj/student/{id}
+
+例： http://mengxun.online/api/oj/student/4a379f0a-28ae-4937-9fc4-c5366bb6cb76
+
+*说明：需要修改哪些信息，就在json数据中传哪些信息*
+
+###### 正确示例：假设只需修改密码
+
+```json
+{
+    "password":"wangwujun"
+}
+```
+
+###### 返回结果：
+
+```json
+{
+    "code": 0,
+    "msg": "学生信息修改成功",
+    "data": {
+        "Email": null,
+        "UpdateAt": "2020-11-04T07:01:45.932+0000",
+        "CreateAt": "2020-11-04T06:59:42.000+0000",
+        "ID": "4a379f0a-28ae-4937-9fc4-c5366bb6cb76",
+        "Name": "hahaha"
+    }
+}
+```
+
+###### 错误示例：
+
+```json
+{
+    "password":"wa"
+}
+```
+
+###### 返回结果：
+
+```json
+{
+    "code": 40000,
+    "msg": "用户密码长度错误",
     "data": null
 }
 ```
