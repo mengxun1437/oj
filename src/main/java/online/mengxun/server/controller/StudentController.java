@@ -3,6 +3,7 @@ package online.mengxun.server.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import online.mengxun.server.entity.Student;
+import online.mengxun.server.entity.Teacher;
 import online.mengxun.server.repository.StudentRepository;
 import online.mengxun.server.response.Check;
 import online.mengxun.server.response.Response;
@@ -125,6 +126,92 @@ public class StudentController {
             return Response.success("学生存在,登录成功",jsonS);
 
         }catch (Exception e){
+            return Response.error();
+        }
+    }
+
+
+    //通过id获取学生的所有信息
+    @GetMapping("/{id}")
+    public Response getTeacherById(@PathVariable("id") String id) {
+        try {
+            //id检查
+            if (!studentRepository.existsById(id)) {
+                return Response.error("提供的学生id不存在");
+            }
+
+            Student student = studentRepository.findById(id).get();
+
+
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("ID", student.getId());
+            jsonObject.put("Name", student.getName());
+            jsonObject.put("Email", student.getEmail());
+            jsonObject.put("CreateAt", student.getCreate_at());
+            jsonObject.put("UpdateAt", student.getUpdate_at());
+
+
+            return Response.success(jsonObject);
+        } catch (Exception e) {
+            return Response.error();
+        }
+    }
+
+
+    //修改教师的个人信息
+    @PatchMapping("/{id}")
+    public Response Modify(@PathVariable("id") String id,
+                           @RequestBody JSONObject jsonObject) {
+        try {
+            //id检查
+            if (!studentRepository.existsById(id)) {
+                return Response.error("提供的学生id不存在");
+            }
+
+            Student student = studentRepository.findById(id).get();
+
+            //获取用户想要修改的参数
+            Check check = new Check();
+            if (!check.noKey(jsonObject, "name")) {
+                if (check.emptyStr(jsonObject.getString("name"))) {
+                    return Response.error("提供的用户名参数为空");
+                }else if (jsonObject.getString("name").length()<2
+                        ||jsonObject.getString("name").length()>6){
+                    return Response.error("用户名长度错误");
+                }
+                student.setName(jsonObject.getString("name"));
+            }
+            if (!check.noKey(jsonObject, "password")) {
+                if (check.emptyStr(jsonObject.getString("password"))) {
+                    return Response.error("提供的密码参数为空");
+                }else if (jsonObject.getString("password").length()<6
+                        ||jsonObject.getString("password").length()>20){
+                    return Response.error("用户密码长度错误");
+                }
+                student.setPassword(jsonObject.getString("password"));
+            }
+            if (!check.noKey(jsonObject, "email")) {
+                if (check.emptyStr(jsonObject.getString("email"))) {
+                    return Response.error("提供的邮箱参数为空");
+                }
+                student.setEmail(jsonObject.getString("email"));
+            }
+
+
+            student.setUpdate_at(new Date());
+
+            if (studentRepository.save(student)!=null){
+                JSONObject _jsonObject = new JSONObject();
+                _jsonObject.put("ID", student.getId());
+                _jsonObject.put("Name", student.getName());
+                _jsonObject.put("Email", student.getEmail());
+                _jsonObject.put("CreateAt", student.getCreate_at());
+                _jsonObject.put("UpdateAt", student.getUpdate_at());
+                return Response.success("学生信息修改成功",_jsonObject);
+            }else{
+                return Response.error("学生信息修改失败");
+            }
+        } catch (Exception e) {
             return Response.error();
         }
     }
