@@ -193,6 +193,8 @@ public class TeacherController {
                 }else if (jsonObject.getString("name").length()<2
                         ||jsonObject.getString("name").length()>6){
                     return Response.error("用户名长度错误");
+                }else if (teacherRepository.findByName(jsonObject.getString("name")).size()!=0){
+                    return Response.error("用户名已被注册");
                 }
                 teacher.setName(jsonObject.getString("name"));
             }

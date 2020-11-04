@@ -178,6 +178,8 @@ public class StudentController {
                 }else if (jsonObject.getString("name").length()<2
                         ||jsonObject.getString("name").length()>6){
                     return Response.error("用户名长度错误");
+                }else if (studentRepository.findByName(jsonObject.getString("name")).size()!=0){
+                    return Response.error("用户名已被注册");
                 }
                 student.setName(jsonObject.getString("name"));
             }
