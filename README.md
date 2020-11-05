@@ -1,58 +1,37 @@
 # OJ系统后端API
+
 - [OJ系统后端API](#oj系统后端api)
           - [报错信息表：](#报错信息表)
     - [一.教师](#一教师)
       - [1.1教师注册](#11教师注册)
-          - [注意：账号2-6位，密码6-20位](#注意账号2-6位密码6-20位)
-          - [接口：[PUT]http://mengxun.online/api/oj/teacher/](#接口puthttpmengxunonlineapiojteacher)
-          - [正确示例](#正确示例)
-          - [返回结果](#返回结果)
-          - [错误案例](#错误案例)
-          - [返回结果](#返回结果-1)
+          - [注意](#注意)
       - [1.2教师登录](#12教师登录)
-          - [注意：账号2-6位，密码6-20位](#注意账号2-6位密码6-20位-1)
-          - [接口：[POST]http://mengxun.online/api/oj/teacher/](#接口posthttpmengxunonlineapiojteacher)
-          - [正确示例](#正确示例-1)
-          - [返回结果](#返回结果-2)
-          - [错误示例](#错误示例)
-          - [返回结果](#返回结果-3)
+          - [注意](#注意-1)
+          - [接口](#接口)
       - [1.3通过id获取教师的具体信息](#13通过id获取教师的具体信息)
-          - [接口：[GET]http://mengxun.online/api/oj/teacher/{id}](#接口gethttpmengxunonlineapiojteacherid)
-          - [返回结果[正确]](#返回结果正确)
-          - [返回结果[错误]](#返回结果错误)
+          - [接口](#接口-1)
       - [1.4修改教师的某些信息](#14修改教师的某些信息)
-          - [注意：账号2-6位，密码6-20位，性别{0,1}，年龄[10,60]](#注意账号2-6位密码6-20位性别01年龄1060)
-          - [接口：[PATCH]http://mengxun.online/api/oj/teacher/{id}](#接口patchhttpmengxunonlineapiojteacherid)
-          - [正确示例：假设只需修改密码](#正确示例假设只需修改密码)
-          - [返回结果](#返回结果-4)
-          - [错误示例](#错误示例-1)
-          - [返回结果](#返回结果-5)
+          - [注意](#注意-2)
+          - [接口](#接口-2)
     - [二.学生](#二学生)
       - [2.1学生注册](#21学生注册)
-          - [注意：账号2-6位，密码6-20位](#注意账号2-6位密码6-20位-2)
-          - [接口：[PUT]http://mengxun.online/api/oj/student/](#接口puthttpmengxunonlineapiojstudent)
-          - [正确示例](#正确示例-2)
-          - [返回结果](#返回结果-6)
-          - [错误案例](#错误案例-1)
-          - [返回结果](#返回结果-7)
+          - [注意](#注意-3)
+          - [接口](#接口-3)
       - [2.2学生登录](#22学生登录)
-          - [注意：账号2-6位，密码6-20位](#注意账号2-6位密码6-20位-3)
-          - [接口：[POST]http://mengxun.online/api/oj/student/](#接口posthttpmengxunonlineapiojstudent)
-          - [正确示例](#正确示例-3)
-          - [返回结果](#返回结果-8)
-          - [错误示例](#错误示例-2)
-          - [返回结果](#返回结果-9)
+          - [注意](#注意-4)
+          - [接口](#接口-4)
       - [2.3通过id获取学生的具体信息](#23通过id获取学生的具体信息)
-          - [接口：[GET]http://mengxun.online/api/oj/student/{id}](#接口gethttpmengxunonlineapiojstudentid)
-          - [返回结果[正确]](#返回结果正确-1)
-          - [返回结果[错误]](#返回结果错误-1)
+          - [接口](#接口-5)
       - [2.4修改学生的某些信息](#24修改学生的某些信息)
-          - [注意：账号2-6位，密码6-20位](#注意账号2-6位密码6-20位-4)
-          - [接口：[PATCH]http://mengxun.online/api/oj/student/{id}](#接口patchhttpmengxunonlineapiojstudentid)
-          - [正确示例：假设只需修改密码](#正确示例假设只需修改密码-1)
-          - [返回结果](#返回结果-10)
-          - [错误示例](#错误示例-3)
-          - [返回结果](#返回结果-11)
+          - [注意](#注意-5)
+          - [接口](#接口-6)
+    - [三.题目](#三题目)
+      - [3.1增加一个新的题目](#31增加一个新的题目)
+          - [注意](#注意-6)
+          - [接口](#接口-7)
+      - [3.2查看某个题目的具体信息](#32查看某个题目的具体信息)
+          - [注意](#注意-7)
+          - [接口](#接口-8)
 
 ###### 报错信息表：
 
@@ -67,11 +46,15 @@
 
 #### 1.1教师注册
 
-###### 注意：账号2-6位，密码6-20位
+###### 注意
 
-###### 接口：[PUT]http://mengxun.online/api/oj/teacher/
+账号2-6位，密码6-20位
 
-###### 正确示例
+接口
+
+[PUT]http://mengxun.online/api/oj/teacher/
+
+正确示例
 
 ```json
 {
@@ -80,7 +63,7 @@
 }
 ```
 
-###### 返回结果
+返回结果
 
 ```json
 {
@@ -95,7 +78,7 @@
 }
 ```
 
-###### 错误案例
+错误案例
 
 ```json
 {
@@ -104,7 +87,7 @@
 }
 ```
 
-###### 返回结果
+返回结果
 
 ```json
 {
@@ -116,11 +99,15 @@
 
 #### 1.2教师登录
 
-###### 注意：账号2-6位，密码6-20位
+###### 注意
 
-###### 接口：[POST]http://mengxun.online/api/oj/teacher/
+账号2-6位，密码6-20位
 
-###### 正确示例
+###### 接口
+
+[POST]http://mengxun.online/api/oj/teacher/
+
+正确示例
 
 ```json
 {
@@ -129,7 +116,7 @@
 }
 ```
 
-###### 返回结果
+返回结果
 
 ```json
 {
@@ -144,7 +131,7 @@
 }
 ```
 
-###### 错误示例
+错误示例
 
 ```json
 {
@@ -153,7 +140,7 @@
 }
 ```
 
-###### 返回结果
+返回结果
 
 ```json
 {
@@ -165,11 +152,15 @@
 
 #### 1.3通过id获取教师的具体信息
 
-###### 接口：[GET]http://mengxun.online/api/oj/teacher/{id}
+###### 接口
 
-例：http://mengxun.online/api/oj/teacher/5322611b-3fb9-4c3d-adf9-af57f1fbe066
+[GET]http://mengxun.online/api/oj/teacher/{id}
 
-###### 返回结果[正确]
+例
+
+http://mengxun.online/api/oj/teacher/5322611b-3fb9-4c3d-adf9-af57f1fbe066
+
+返回结果[正确]
 
 ```json
 {
@@ -187,7 +178,7 @@
 }
 ```
 
-###### 返回结果[错误]
+返回结果[错误]
 
 ```json
 {
@@ -199,15 +190,21 @@
 
 #### 1.4修改教师的某些信息
 
-###### 注意：账号2-6位，密码6-20位，性别{0,1}，年龄[10,60]
+###### 注意
 
-###### 接口：[PATCH]http://mengxun.online/api/oj/teacher/{id}
+​	1.账号2-6位，密码6-20位，性别{0,1}，年龄[10,60]
 
-例： http://mengxun.online/api/oj/teacher/5322611b-3fb9-4c3d-adf9-af57f1fbe066 
+​	2.需要修改哪些信息，就在json数据中传哪些信息
 
-*说明：需要修改哪些信息，就在json数据中传哪些信息*
+###### 接口
 
-###### 正确示例：假设只需修改密码
+[PATCH]http://mengxun.online/api/oj/teacher/{id}
+
+例
+
+ http://mengxun.online/api/oj/teacher/5322611b-3fb9-4c3d-adf9-af57f1fbe066 
+
+正确示例：假设只需修改密码
 
 ```json
 {
@@ -215,7 +212,7 @@
 }
 ```
 
-###### 返回结果
+返回结果
 
 ```json
 {
@@ -233,7 +230,7 @@
 }
 ```
 
-###### 错误示例
+错误示例
 
 ```json
 {
@@ -241,7 +238,7 @@
 }
 ```
 
-###### 返回结果
+返回结果
 
 ```json
 {
@@ -257,11 +254,15 @@
 
 #### 2.1学生注册
 
-###### 注意：账号2-6位，密码6-20位
+###### 注意
 
-###### 接口：[PUT]http://mengxun.online/api/oj/student/
+账号2-6位，密码6-20位
 
-###### 正确示例
+###### 接口
+
+[PUT]http://mengxun.online/api/oj/student/
+
+正确示例
 
 ```json
 {
@@ -270,7 +271,7 @@
 }
 ```
 
-###### 返回结果
+返回结果
 
 ```json
 {
@@ -285,7 +286,7 @@
 }
 ```
 
-###### 错误案例
+错误案例
 
 ```json
 {
@@ -294,7 +295,7 @@
 }
 ```
 
-###### 返回结果
+返回结果
 
 ```json
 {
@@ -306,11 +307,15 @@
 
 #### 2.2学生登录
 
-###### 注意：账号2-6位，密码6-20位
+###### 注意
 
-###### 接口：[POST]http://mengxun.online/api/oj/student/
+账号2-6位，密码6-20位
 
-###### 正确示例
+###### 接口
+
+[POST]http://mengxun.online/api/oj/student/
+
+正确示例
 
 ```json
 {
@@ -319,7 +324,7 @@
 }
 ```
 
-###### 返回结果
+返回结果
 
 ```json
 {
@@ -334,7 +339,7 @@
 }
 ```
 
-###### 错误示例
+错误示例
 
 ```json
 {
@@ -343,7 +348,7 @@
 }
 ```
 
-###### 返回结果
+返回结果
 
 ```json
 {
@@ -355,11 +360,15 @@
 
 #### 2.3通过id获取学生的具体信息
 
-###### 接口：[GET]http://mengxun.online/api/oj/student/{id}
+###### 接口
 
-例：http://mengxun.online/api/oj/student/4a379f0a-28ae-4937-9fc4-c5366bb6cb76
+[GET]http://mengxun.online/api/oj/student/{id}
 
-###### 返回结果[正确]
+例
+
+http://mengxun.online/api/oj/student/4a379f0a-28ae-4937-9fc4-c5366bb6cb76
+
+返回结果[正确]
 
 ```json
 {
@@ -375,7 +384,7 @@
 }
 ```
 
-###### 返回结果[错误]
+返回结果[错误]
 
 ```json
 {
@@ -387,15 +396,21 @@
 
 #### 2.4修改学生的某些信息
 
-###### 注意：账号2-6位，密码6-20位
+###### 注意
 
-###### 接口：[PATCH]http://mengxun.online/api/oj/student/{id}
+​	1.账号2-6位，密码6-20位
 
-例： http://mengxun.online/api/oj/student/4a379f0a-28ae-4937-9fc4-c5366bb6cb76
+​	2.需要修改哪些信息，就在json数据中传哪些信息
 
-*说明：需要修改哪些信息，就在json数据中传哪些信息*
+###### 接口
 
-###### 正确示例：假设只需修改密码
+[PATCH]http://mengxun.online/api/oj/student/{id}
+
+例
+
+http://mengxun.online/api/oj/student/4a379f0a-28ae-4937-9fc4-c5366bb6cb76
+
+正确示例：假设只需修改密码
 
 ```json
 {
@@ -403,7 +418,7 @@
 }
 ```
 
-###### 返回结果
+返回结果
 
 ```json
 {
@@ -419,7 +434,7 @@
 }
 ```
 
-###### 错误示例
+错误示例
 
 ```json
 {
@@ -427,12 +442,147 @@
 }
 ```
 
-###### 返回结果
+返回结果
 
 ```json
 {
     "code": 40000,
     "msg": "用户密码长度错误",
+    "data": null
+}
+```
+
+
+
+### 三.题目
+
+#### 3.1增加一个新的题目
+
+###### 注意
+
+​	1.提交参数的json中必须由name/detail/creator/diff这四个参数
+
+​	2.如果由代码样例需要code（base64形式）,提交code的时候必须加入codetype(代码文件类型)
+
+​	3.diff是题目难度，可选参数0/1/2，整数形式提交
+
+###### 接口
+
+[PUT]http://mengxun.online/api/oj/question/
+
+正确示例
+
+```json
+{
+    "name":"题目一",
+    "detail":"题目一的描述",
+    "creator":"df7e5a0c-8920-45a2-b92a-604d66e95e48",
+    "diff":2,
+ "code":"ewogICAgIm5hbWUiOiLnjovmrabkv4oiLAogICAgInBhc3N3b3JkIjoid2FuZ3d1anVuIgp9Cg==",
+    "codetype":"json"
+}
+```
+
+返回结果
+
+```json
+{
+    "code": 0,
+    "msg": "保存成功",
+    "data": {
+        "UpdateAt": "2020-11-05T12:11:45.567+0000",
+        "TestData": "",
+        "CreateAt": "2020-11-05T12:11:45.567+0000",
+        "Diff": 2,
+        "ID": "f7a6878b-7265-4a04-8095-4629328a2159",
+        "Creator": "df7e5a0c-8920-45a2-b92a-604d66e95e48",
+        "Detail": "题目一的描述",
+        "Name": "题目一"
+    }
+}
+```
+
+错误案例
+
+```json
+{
+    "name":"题目一",
+    "detail":"题目一的描述",
+    "creator":"df7e5a0c-8920-45a2-b92a-604d66e95e48",
+    "diff":2,
+    "code":"ewogICAgIm5hbWUiOiLnjovmrabkv4oiLAogICAgInBhc3N3b3JkIjoid2FuZ3d1anVuIgp9Cg=="
+}
+```
+
+返回结果
+
+```json
+{
+    "code": 40000,
+    "msg": "codetype参数缺失",
+    "data": null
+}
+```
+
+#### 3.2查看某个题目的具体信息
+
+###### 注意
+
+​	1.必须指定请求者的身份teacher/student
+
+​	2.如果需要获取这一题的代码样例，需要指定获取代码样例的文件类型（codetype)，不需要的话可以不写
+
+###### 接口
+
+[GET]http://mengxun.online/api/oj/question/{id}
+
+例
+
+ http://mengxun.online/api/oj/question/f7a6878b-7265-4a04-8095-4629328a2159
+
+正确案例
+
+```json
+{
+   "identity":"student",
+   "codetype":"json"
+}
+```
+
+返回结果
+
+```json
+{
+    "code": 0,
+    "msg": "题目存在",
+    "data": {
+        "UpdateAt": "2020-11-05T12:11:45.000+0000",
+        "code": "ewogICAgIm5hbWUiOiLnjovmrabkv4oiLAogICAgInBhc3N3b3JkIjoid2FuZ3d1anVuIgp9Cg==",
+        "CreateAt": "2020-11-05T12:11:45.000+0000",
+        "Diff": 2,
+        "codetype": "json",
+        "ID": "f7a6878b-7265-4a04-8095-4629328a2159",
+        "Creator": "df7e5a0c-8920-45a2-b92a-604d66e95e48",
+        "Detail": "题目一的描述",
+        "Name": "题目一"
+    }
+}
+```
+
+错误案例
+
+```json
+{
+   "codetype":"json"
+}
+```
+
+返回结果
+
+```json
+{
+    "code": 40000,
+    "msg": "必须说明用户身份：teacher/student",
     "data": null
 }
 ```

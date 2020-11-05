@@ -58,8 +58,7 @@ public class TeacherController {
                 return Response.error("密码长度不合法");
             }
 
-            int flag = teacherRepository.findByName(name).size();
-            if (flag != 0) {
+            if (teacherRepository.existsByName(name)){
                 return Response.error("用户名已经注册");
             }
 
