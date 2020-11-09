@@ -587,3 +587,56 @@ http://mengxun.online/api/oj/student/4a379f0a-28ae-4937-9fc4-c5366bb6cb76
 }
 ```
 
+#### 3.3修改题目的某些信息
+
+###### 注意
+
+​	1.必须提交教师的id（json中的creator）
+
+​	2.需要修改哪些信息就在json中写哪些信息，如果需要添加codetype不同的代码样例，也可以通过这个接口
+
+###### 接口
+
+[PATCH]http://mengxun.online/api/oj/question/{id}
+
+例
+
+ http://mengxun.online/api/oj/question/f7a6878b-7265-4a04-8095-4629328a2159
+
+正确案例
+
+```json
+{
+    "creator":"df7e5a0c-8920-45a2-b92a-604d66e95e48",
+    "name":"题目更改后"
+}
+```
+
+返回结果
+
+```json
+{
+    "code": 0,
+    "msg": "修改题目信息成功",
+    "data": null
+}
+```
+
+错误案例
+
+```json
+{
+    "name":"题目更改后"
+}
+```
+
+返回结果
+
+```json
+{
+    "code": 40000,
+    "msg": "creator参数缺失",
+    "data": null
+}
+```
+
