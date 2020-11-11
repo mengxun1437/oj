@@ -1,6 +1,7 @@
 package online.mengxun.server.controller;
 
 import ch.qos.logback.core.pattern.util.RegularEscapeUtil;
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.sun.org.apache.bcel.internal.generic.ACONST_NULL;
@@ -14,8 +15,12 @@ import online.mengxun.server.response.Response;
 import online.mengxun.server.utils.FileOP;
 import org.bouncycastle.est.CACertsResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.*;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -337,6 +342,66 @@ public class QuestionController {
             questionRepository.deleteById(id);
 
             return Response.success("删除题目成功");
+
+        }catch (Exception e){
+            return Response.error();
+        }
+    }
+
+    //获取题目列表
+    @GetMapping("/list")
+    public Response getQuestionByPage(@RequestBody JSONObject jsonObject){
+        try{
+            Check check=new Check();
+            if (check.noKey(jsonObject,"identity")){
+                return Response.error("必须提交identity:teacher/student");
+            }
+            String identity=jsonObject.getString("identity");
+
+            if (check.emptyStr(identity)){
+                return Response.error("identity不能为空");
+            }else if (identity.equals("teacher")){
+                if (check.noKey(jsonObject,"creator")){
+                    return Response.error("教师身份查询需指明creator");
+                }
+
+                String creaotor=jsonObject.getString("creator");
+                if (check.emptyStr(creaotor)){
+                    return Response.error("creator不可为空");
+                }
+                List<Question> questions=questionRepository.findAllByCreator(creaotor);
+                JSONObject tmpQT=new JSONObject();
+                ArrayList<JSONObject> arrayList=new ArrayList<>();
+                for (Question question:questions){
+                    tmpQT=new JSONObject();
+                    tmpQT.put("ID",question.getId());
+                    tmpQT.put("Name",question.getName());
+                    tmpQT.put("Diff",question.getDiff());
+                    tmpQT.put("CreateAt",question.getCreate_at());
+                    tmpQT.put("UpdateAt",question.getUpdate_at());
+
+                    arrayList.add(tmpQT);
+                }
+                return Response.success(arrayList);
+            }else if (identity.equals("student")){
+                List<Question> questions=questionRepository.findAll();
+                JSONObject tmpQS=new JSONObject();
+                ArrayList<JSONObject> arrayList=new ArrayList<>();
+                for (Question question:questions){
+                    tmpQS=new JSONObject();
+                    tmpQS.put("ID",question.getId());
+                    tmpQS.put("Name",question.getName());
+                    tmpQS.put("Diff",question.getDiff());
+                    tmpQS.put("CreateAt",question.getCreate_at());
+                    tmpQS.put("UpdateAt",question.getUpdate_at());
+
+                    arrayList.add(tmpQS);
+                }
+                return Response.success(arrayList);
+            }else{
+                return Response.error("identity参数不符合要求");
+            }
+
 
         }catch (Exception e){
             return Response.error();
