@@ -294,7 +294,7 @@ public class QuestionController {
     }
 
     //删除一个题目
-    @DeleteMapping("{id}")
+    @DeleteMapping("/{id}")
     public Response deleteQuestion(@PathVariable("id") String id,
                                    @RequestBody JSONObject jsonObject){
         try{
