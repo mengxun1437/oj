@@ -14,3 +14,4 @@ online\mengxun\server\entity\Question.class
 online\mengxun\server\controller\GitController.class
 online\mengxun\server\utils\FileOP.class
 online\mengxun\server\repository\TeacherRepository.class
+online\mengxun\server\controller\DockerRunCode.class

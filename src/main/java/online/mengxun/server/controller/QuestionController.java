@@ -138,7 +138,7 @@ public class QuestionController {
     }
 
     //查看某个题目的具体信息,不含代码样例
-    @GetMapping("/{id}")
+    @PostMapping("/{id}")
     public Response getQuestionDetail(@PathVariable("id") String id,
                                       @RequestBody JSONObject jsonObject){
 
@@ -351,7 +351,7 @@ public class QuestionController {
     }
 
     //获取题目列表
-    @GetMapping("/list")
+    @PostMapping("/list")
     public Response getQuestionByPage(@RequestBody JSONObject jsonObject){
         try{
             Check check=new Check();

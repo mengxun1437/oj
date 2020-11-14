@@ -108,7 +108,7 @@ public class CodeController {
     }
 
     //获取用户提交的所有版本的版本号
-    @GetMapping("/{id}")
+    @PostMapping("/{id}")
     public Response GetUserAllCommit(@PathVariable("id") String id,
                                      @RequestBody JSONObject jsonObject){
         try{
@@ -149,7 +149,7 @@ public class CodeController {
     }
 
     //查看用户某个历史版本具体信息
-    @GetMapping("/{id}/{version}")
+    @PostMapping("/{id}/{version}")
     public Response GetCommitDetail(@PathVariable("id") String id,
                                     @PathVariable("version") String version,
                                     @RequestBody JSONObject jsonObject){
