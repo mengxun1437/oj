@@ -1,17 +1,22 @@
 package online.mengxun.server.controller;
 
+import com.mysql.jdbc.util.Base64Decoder;
+import sun.misc.BASE64Decoder;
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.parser.Feature;
+import com.fasterxml.jackson.core.io.JsonStringEncoder;
+import com.fasterxml.jackson.databind.ser.Serializers;
 import online.mengxun.server.response.Check;
 import online.mengxun.server.response.Response;
 import online.mengxun.server.utils.FileOP;
 import org.apache.catalina.mapper.Mapper;
 import org.eclipse.jgit.api.Git;
 import org.springframework.web.bind.annotation.*;
+import sun.misc.BASE64Encoder;
+import sun.misc.IOUtils;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.util.*;
 
 import static online.mengxun.server.controller.GitController.*;
@@ -21,7 +26,7 @@ import static online.mengxun.server.controller.GitController.*;
 @RequestMapping("/code")
 public class CodeController {
 
-    public static String repoPath="D:\\repo1\\";
+    public static String repoPath="D:\\repo\\";
 
     //提交代码
     @PutMapping("/{id}")
@@ -29,32 +34,59 @@ public class CodeController {
                                @RequestBody JSONObject jsonObject){
         try{
             Check check=new Check();
-            if (check.noKey(jsonObject,"type")
-                    ||check.noKey(jsonObject,"file")
-                    ||check.noKey(jsonObject,"repoName")){
+            if (check.noKey(jsonObject,"codetype")
+                    ||check.noKey(jsonObject,"code")
+                    ||check.noKey(jsonObject,"qid")){
                 return Response.error("提交数据缺失");
             }
 
-            String file=jsonObject.getString("file");
-            String type=jsonObject.getString("type");
-            String repoName=jsonObject.getString("repoName");
+            String code=jsonObject.getString("code");
+            String codetype=jsonObject.getString("codetype");
+            String qid=jsonObject.getString("qid");
 
-            String targetPath=repoPath+repoName;
+            if (check.emptyStr(code)||check.emptyStr(codetype)||check.emptyStr(qid)){
+                return Response.error("提交参数不能为空");
+            }
 
-            Git git=GitController.AddNewGitRepo(repoPath,repoName);
-            System.out.println(git);
+            String targetPath=repoPath+qid;
+
+            File file=new File(targetPath);
+
+            if (!file.exists()){
+                file.mkdirs();
+            }
+
+            Git git= GitOpenRepo(repoPath,qid);
+
+//            System.out.println(git);
 
 
             CheckOut(git,id);
 
             //将base64解码并保存到文件中
-            byte[] data= Base64.getDecoder().decode(file);
+            byte[] data= Base64.getDecoder().decode(code);
 
-            FileOP.delAllFile(targetPath);
 
-            OutputStream outputStream=new FileOutputStream(targetPath+"\\code.txt");
+            OutputStream outputStream=new FileOutputStream(targetPath+"\\code");
             outputStream.write(data);
             outputStream.close();
+
+
+
+
+
+            JSONObject jsonR=new JSONObject();
+            jsonR.put("CodeType",codetype);
+            jsonR.put("AccessState","Pass");
+
+
+
+
+            byte[] result=jsonR.toJSONString().getBytes();
+            outputStream=new FileOutputStream(targetPath+"\\result");
+            outputStream.write(result);
+            outputStream.close();
+
 
 
             git.add().addFilepattern(".").call();
@@ -81,29 +113,34 @@ public class CodeController {
                                      @RequestBody JSONObject jsonObject){
         try{
             Check check=new Check();
-            if (check.noKey(jsonObject,"repoName")){
+            if (check.noKey(jsonObject,"qid")){
                 return Response.error("提交数据缺失");
             }
 
-            String repoName=jsonObject.getString("repoName");
+            String qid=jsonObject.getString("qid");
 
-            Git git=GitController.AddNewGitRepo(repoPath,repoName);
+            if (check.emptyStr(qid)){
+                return Response.error("qid不能为空");
+            }
+
+            Git git=GitController.GitOpenRepo(repoPath,qid);
 
             ArrayList arrayList=GitController.GetAllCommit(git,id);
-            System.out.println("arraylist\t"+arrayList);
+//            System.out.println("arraylist\t"+arrayList);
 
 
 
             //最后将分支切回主分支
             BackToMaster(git);
 
-            Map<String,Object> map= new HashMap<String,Object>();
-            map.put("id",id);
-            map.put("version",arrayList);
+            JSONObject jsonC=new JSONObject();
+            jsonC.put("ID",id);
+            jsonC.put("QID",qid);
+            jsonC.put("Versions",arrayList);
 
 
 
-            return Response.success(map);
+            return Response.success(jsonC);
 
         }catch (Exception e){
             e.printStackTrace();
@@ -119,20 +156,18 @@ public class CodeController {
         try{
 
             Check check=new Check();
-            if (check.noKey(jsonObject,"type")
-                ||check.noKey(jsonObject,"repoName")){
+            if (check.noKey(jsonObject,"qid")){
                 return Response.error("提交数据缺失");
             }
 
-            String type=jsonObject.getString("type");
-            String repoName=jsonObject.getString("repoName");
+            String qid=jsonObject.getString("qid");
 
-            Git git=GitController.AddNewGitRepo(repoPath,repoName);
+            Git git=GitController.GitOpenRepo(repoPath,qid);
 
             VersionBack(git,id,version);
 
-            File file = new File(repoPath+repoName+"\\code.txt");
-            FileInputStream in = new FileInputStream(repoPath+repoName+"\\code.txt");
+            File file = new File(repoPath+qid+"\\code");
+            FileInputStream in = new FileInputStream(repoPath+qid+"\\code");
             byte[] bytes = new byte[(int) file.length()];
             in.read(bytes);
             String base64 = new String(Base64.getEncoder().encode(bytes), "UTF-8");
@@ -142,7 +177,26 @@ public class CodeController {
                 in.close();
             }
 
-            System.out.println(bytes);
+
+            file =new File(repoPath+qid,"\\result");
+            in=new FileInputStream(repoPath+qid+"\\result");
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in));
+            String jsonStr = "";
+            String tmp=null;
+
+            while ((tmp = bufferedReader.readLine()) != null) {
+                jsonStr+=tmp;
+            }
+
+            bufferedReader.close();
+
+            if (in!=null){
+                in.close();
+            }
+
+
+
+//            System.out.println(bytes);
 
 //            git.add().addFilepattern(".").call();
 //            git.commit().setMessage("io流").call();
@@ -152,15 +206,15 @@ public class CodeController {
             BackToMaster(git);
 
 
-            Map<String,Object> map=new HashMap<>();
+            JSONObject jsonQ=new JSONObject();
 
-            map.put("id",id);
-            map.put("version",version);
-            map.put("type",type);
-            map.put("file",base64);
+            jsonQ.put("ID",id);
+            jsonQ.put("Version",version);
+            jsonQ.put("Code",base64);
+            jsonQ.put("Result",JSONObject.parseObject(jsonStr));
 
 
-            return Response.success(map);
+            return Response.success(jsonQ);
         }catch (Exception e){
             e.printStackTrace();
             return Response.error();

@@ -13,6 +13,7 @@ import online.mengxun.server.repository.TeacherRepository;
 import online.mengxun.server.response.Check;
 import online.mengxun.server.response.Response;
 import online.mengxun.server.utils.FileOP;
+import org.aspectj.apache.bcel.classfile.Code;
 import org.bouncycastle.est.CACertsResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -34,7 +35,7 @@ public class QuestionController {
 
     @Autowired
     private QuestionRepository questionRepository;
-    private String localCodePath="/web/oj/localCode/";
+    private String localCodePath="D:\\localCode\\";
 
 
     //增加一个题目
@@ -91,7 +92,7 @@ public class QuestionController {
                     }
 
 
-                    OutputStream outputStream = new FileOutputStream(localCodePath + creator + "/" + id + "." + codetype);
+                    OutputStream outputStream = new FileOutputStream(localCodePath + creator + "\\" + id + "." + codetype);
 
                     outputStream.write(data);
                     outputStream.close();
@@ -123,6 +124,7 @@ public class QuestionController {
             jsonQ.put("UpdateAt",question.getUpdate_at());
 
             if (questionRepository.save(question) != null) {
+                GitController.AddNewGitRepo(CodeController.repoPath,id);
                 return Response.success("保存成功",jsonQ);
             }else{
                 return Response.error("保存失败");
@@ -177,9 +179,9 @@ public class QuestionController {
                 if (check.emptyStr(jsonObject.getString("codetype"))){
                     return Response.error("codetype不可为空");
                 }
-                File file=new File(localCodePath+question.getCreator()+"/"+id+"."+jsonObject.getString("codetype"));
+                File file=new File(localCodePath+question.getCreator()+"\\"+id+"."+jsonObject.getString("codetype"));
                 if (file.exists()&&file.isFile()){
-                    FileInputStream in = new FileInputStream(localCodePath+question.getCreator()+"/"+id+"."+jsonObject.getString("codetype"));
+                    FileInputStream in = new FileInputStream(localCodePath+question.getCreator()+"\\"+id+"."+jsonObject.getString("codetype"));
                     byte[] bytes = new byte[(int) file.length()];
                     in.read(bytes);
                     String base64 = new String(Base64.getEncoder().encode(bytes), "UTF-8");
@@ -280,7 +282,7 @@ public class QuestionController {
                 }
 
 
-                OutputStream outputStream = new FileOutputStream(localCodePath + creator + "/" + id + "." + codetype);
+                OutputStream outputStream = new FileOutputStream(localCodePath + creator + "\\" + id + "." + codetype);
 
                 outputStream.write(data);
                 outputStream.close();

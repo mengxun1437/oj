@@ -7,6 +7,7 @@ import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.revwalk.RevCommit;
 
 import java.io.File;
+import java.io.FileReader;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Date;
@@ -24,26 +25,49 @@ public class GitController {
     }
 
     //创建每一道题目的仓库
-    public static Git AddNewGitRepo(String repoPath, String repoName){
-        Git git=null;
-        try{
-            //首先判断给的地址是否可以作为仓库，如果不能，就打开这个仓库
-            File repo=new File(repoPath);
-            if (!repo.exists()&&git==null){
-                repo.mkdirs();
-                git=Git.init().setDirectory(new File(repoPath+repoName)).call();
-                git.add().addFilepattern(".").call();
-                git.commit().setMessage("git init").call();
-            }else if(repo.exists()){
-                git = Git.open(new File(repoPath+repoName));
-                BackToMaster(git);
+    public static void AddNewGitRepo(String repoPath, String repoName){
+        try {
+            File file=new File(repoPath+repoName);
+            if (!file.exists()){
+                file.mkdirs();
             }
-            System.out.println(git);
-            return git;
+            Git git=Git.init().setDirectory(file).call();
+            git.add().addFilepattern(".").call();
+            git.commit().setMessage("git init").call();
+//            }else{
+//                git = Git.open(new File(repoPath+repoName));
+//                BackToMaster(git);
+//            }
+//            System.out.println(git);
+//            return git;
         }catch (Exception e){
             e.printStackTrace();
         }
-        return git;
+    }
+
+    //打开每个仓库
+    public static Git GitOpenRepo(String repoPath,String repoName){
+        try{
+            File file=new File(repoPath+repoName);
+            if (!file.exists()){
+                file.mkdirs();
+            }
+
+            try{
+                Git.open(new File(repoPath+repoName));
+            }catch (Exception e){
+                AddNewGitRepo(repoPath,repoName);
+            }
+
+            Git git = Git.open(file);
+            BackToMaster(git);
+
+            return git;
+
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
     }
 
 
