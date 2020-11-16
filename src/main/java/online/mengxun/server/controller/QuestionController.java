@@ -2,6 +2,7 @@ package online.mengxun.server.controller;
 
 import ch.qos.logback.core.pattern.util.RegularEscapeUtil;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.sun.org.apache.bcel.internal.generic.ACONST_NULL;
@@ -14,6 +15,7 @@ import online.mengxun.server.response.Check;
 import online.mengxun.server.response.Response;
 import online.mengxun.server.utils.FileOP;
 import org.aspectj.apache.bcel.classfile.Code;
+import org.bouncycastle.crypto.engines.BlowfishEngine;
 import org.bouncycastle.est.CACertsResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -21,6 +23,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import org.springframework.web.bind.annotation.*;
 
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 import java.io.*;
@@ -29,6 +32,8 @@ import java.util.Base64;
 import java.util.Date;
 import java.util.UUID;
 
+import static org.apache.tomcat.util.http.fileupload.FileUtils.deleteDirectory;
+
 @RestController
 @RequestMapping("/question")
 public class QuestionController {
@@ -36,6 +41,7 @@ public class QuestionController {
     @Autowired
     private QuestionRepository questionRepository;
     private String localCodePath="D:\\localCode\\";
+    private String localTestDataPath="D:\\localTest\\";
 
 
     //增加一个题目
@@ -66,10 +72,10 @@ public class QuestionController {
                 return Response.error("diff提交的参数不符合要求");
             }
 
-            String testdata="";
-            if (!check.noKey(jsonObject,"testdata")&&!check.emptyStr("testdata")){
-                testdata=jsonObject.getString("testdata");
-            }
+//            String testdata="";
+//            if (!check.noKey(jsonObject,"testdata")&&!check.emptyStr("testdata")){
+//                testdata=jsonObject.getString("testdata");
+//            }
 
             String id = UUID.randomUUID().toString();
 
@@ -92,7 +98,7 @@ public class QuestionController {
                     }
 
 
-                    OutputStream outputStream = new FileOutputStream(localCodePath + creator + "\\" + id + "." + codetype);
+                    OutputStream outputStream = new FileOutputStream(localCodePath + creator + File.separator + id + "." + codetype);
 
                     outputStream.write(data);
                     outputStream.close();
@@ -107,7 +113,7 @@ public class QuestionController {
             question.setId(id);
             question.setName(name);
             question.setDetail(detail);
-            question.setTestdata(testdata);
+//            question.setTestdata(testdata);
             question.setCreator(creator);
             question.setDiff(diff);
             question.setCreate_at(new Date());
@@ -118,7 +124,7 @@ public class QuestionController {
             jsonQ.put("Name",name);
             jsonQ.put("Detail",detail);
             jsonQ.put("Creator",creator);
-            jsonQ.put("TestData",testdata);
+//            jsonQ.put("TestData",testdata);
             jsonQ.put("Diff",diff);
             jsonQ.put("CreateAt",question.getCreate_at());
             jsonQ.put("UpdateAt",question.getUpdate_at());
@@ -171,17 +177,17 @@ public class QuestionController {
             jsonQ.put("CreateAt",question.getCreate_at());
             jsonQ.put("UpdateAt",question.getUpdate_at());
 
-            if (identity.equals("teacher")){
-                jsonQ.put("TestData",question.getTestdata());
-            }
+//            if (identity.equals("teacher")){
+//                jsonQ.put("TestData",question.getTestdata());
+//            }
 
             if (!check.noKey(jsonObject,"codetype")){
                 if (check.emptyStr(jsonObject.getString("codetype"))){
                     return Response.error("codetype不可为空");
                 }
-                File file=new File(localCodePath+question.getCreator()+"\\"+id+"."+jsonObject.getString("codetype"));
+                File file=new File(localCodePath+question.getCreator()+File.separator+id+"."+jsonObject.getString("codetype"));
                 if (file.exists()&&file.isFile()){
-                    FileInputStream in = new FileInputStream(localCodePath+question.getCreator()+"\\"+id+"."+jsonObject.getString("codetype"));
+                    FileInputStream in = new FileInputStream(localCodePath+question.getCreator()+File.separator+id+"."+jsonObject.getString("codetype"));
                     byte[] bytes = new byte[(int) file.length()];
                     in.read(bytes);
                     String base64 = new String(Base64.getEncoder().encode(bytes), "UTF-8");
@@ -247,13 +253,13 @@ public class QuestionController {
                 }
                 question.setDetail(detail);
             }
-            if (!check.noKey(jsonObject,"testdata")){
-                String testdata=jsonObject.getString("testdata");
-                if (check.emptyStr(testdata)){
-                    return Response.error("提交的testdata不能为空");
-                }
-                question.setTestdata(testdata);
-            }
+//            if (!check.noKey(jsonObject,"testdata")){
+//                String testdata=jsonObject.getString("testdata");
+//                if (check.emptyStr(testdata)){
+//                    return Response.error("提交的testdata不能为空");
+//                }
+//                question.setTestdata(testdata);
+//            }
             if (!check.noKey(jsonObject,"diff")){
                 Integer diff=jsonObject.getInteger("diff");
                 if (diff!=0&&diff!=1&&diff!=2){
@@ -282,7 +288,7 @@ public class QuestionController {
                 }
 
 
-                OutputStream outputStream = new FileOutputStream(localCodePath + creator + "\\" + id + "." + codetype);
+                OutputStream outputStream = new FileOutputStream(localCodePath + creator + File.separator + id + "." + codetype);
 
                 outputStream.write(data);
                 outputStream.close();
@@ -406,6 +412,125 @@ public class QuestionController {
 
 
         }catch (Exception e){
+            return Response.error();
+        }
+    }
+
+
+    //为一个题目新增/更新 测试数据
+    @PutMapping("/testdata/{id}")
+    public Response AddNewTestData(@PathVariable("id") String qid,
+                                   @RequestBody JSONObject jsonObject){
+        try{
+
+            //检测题目id是否存在
+            if(!questionRepository.existsById(qid)){
+                return Response.error("题目不存在");
+            }
+
+            Check check=new Check();
+
+            if (check.noKey(jsonObject,"testdata")){
+                return Response.error("缺少testdata参数");
+            }
+
+
+            JSONArray json = jsonObject.getJSONArray("testdata");
+
+
+            //首先删除原先的测试文件夹
+            File qidFile=new File(localTestDataPath+qid);
+            if (qidFile.exists()){
+                deleteDirectory(qidFile);
+            }
+
+            qidFile.mkdirs();
+            new File(localTestDataPath+qid+File.separator+"in").mkdirs();
+            new File(localTestDataPath+qid+File.separator+"out").mkdirs();
+
+
+            for (int i=0;i<json.size();i++){
+                HashMap<String,Object> map=(HashMap<String, Object>) json.get(i);
+//                System.out.println(map);
+
+                FileOutputStream fileOutputStream=new FileOutputStream(localTestDataPath+qid+File.separator+"in"+File.separator+(i+1)+".in");
+                byte[] bytes=map.get("input").toString().getBytes();
+                fileOutputStream.write(bytes);
+                fileOutputStream.close();
+
+                fileOutputStream=new FileOutputStream(localTestDataPath+qid+File.separator+"out"+File.separator+(i+1)+".out");
+                bytes=map.get("output").toString().getBytes();
+                fileOutputStream.write(bytes);
+                fileOutputStream.close();
+            }
+
+
+
+
+            return Response.success("更新题目测试数据成功");
+
+        }catch (Exception e){
+            e.printStackTrace();
+            return Response.error();
+        }
+    }
+
+    //获取某一道题的测试数据
+    @GetMapping("/testdata/{id}")
+    public Response getTestData(@PathVariable("id") String qid){
+        try{
+
+            ArrayList<JSONObject> arrayList=new ArrayList<JSONObject>();
+
+
+            //检测题目id是否存在
+            if(!questionRepository.existsById(qid)){
+                return Response.error("题目不存在");
+            }
+
+            File file=new File(localTestDataPath+qid+File.separator);
+            if (!file.exists()){
+                return Response.error("此题还未设置测试数据");
+            }
+
+            for (File tmpInFile:new File(localTestDataPath+qid+File.separator+"in").listFiles()){
+                System.out.println(tmpInFile.getName());
+                FileInputStream fileIn_Instream=new FileInputStream(tmpInFile);
+                byte[] fileIn_bytes=new byte[(int) tmpInFile.length()];
+                fileIn_Instream.read(fileIn_bytes);
+                String tmpInStr=new String(fileIn_bytes, StandardCharsets.UTF_8);
+                if (fileIn_Instream!=null){
+                    fileIn_Instream.close();
+                }
+
+                for (File tmpOutFile:new File(localTestDataPath+qid+File.separator+"out").listFiles()){
+                    System.out.println(tmpOutFile.getName());
+
+                    if (tmpInFile.getName().split("\\.")[0].equals(tmpOutFile.getName().split("\\.")[0])){
+                        FileInputStream fileOut_Instream=new FileInputStream(tmpOutFile);
+                        byte[] fileOut_bytes=new byte[(int) tmpOutFile.length()];
+                        fileOut_Instream.read(fileOut_bytes);
+                        String tmpOutStr=new String(fileOut_bytes, StandardCharsets.UTF_8);
+                        if (fileOut_Instream!=null){
+                            fileOut_Instream.close();
+                        }
+
+                        JSONObject jsonObject=new JSONObject();
+                        jsonObject.put("output",tmpOutStr);
+                        jsonObject.put("input",tmpInStr);
+
+                        arrayList.add(jsonObject);
+
+                    }
+
+                }
+            }
+
+
+            return Response.success(arrayList);
+
+        }catch (Exception e){
+            e.printStackTrace();
             return Response.error();
         }
     }

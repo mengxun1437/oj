@@ -67,7 +67,7 @@ public class CodeController {
             byte[] data= Base64.getDecoder().decode(code);
 
 
-            OutputStream outputStream=new FileOutputStream(targetPath+"\\code");
+            OutputStream outputStream=new FileOutputStream(targetPath+File.separator+"code");
             outputStream.write(data);
             outputStream.close();
 
@@ -83,7 +83,7 @@ public class CodeController {
 
 
             byte[] result=jsonR.toJSONString().getBytes();
-            outputStream=new FileOutputStream(targetPath+"\\result");
+            outputStream=new FileOutputStream(targetPath+File.separator+"result");
             outputStream.write(result);
             outputStream.close();
 
@@ -166,8 +166,8 @@ public class CodeController {
 
             VersionBack(git,id,version);
 
-            File file = new File(repoPath+qid+"\\code");
-            FileInputStream in = new FileInputStream(repoPath+qid+"\\code");
+            File file = new File(repoPath+qid+File.separator+"code");
+            FileInputStream in = new FileInputStream(repoPath+qid+File.separator+"code");
             byte[] bytes = new byte[(int) file.length()];
             in.read(bytes);
             String base64 = new String(Base64.getEncoder().encode(bytes), "UTF-8");
@@ -178,8 +178,8 @@ public class CodeController {
             }
 
 
-            file =new File(repoPath+qid,"\\result");
-            in=new FileInputStream(repoPath+qid+"\\result");
+            file =new File(repoPath+qid+File.separator+"result");
+            in=new FileInputStream(repoPath+qid+File.separator+"result");
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in));
             String jsonStr = "";
             String tmp=null;
