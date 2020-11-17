@@ -40,8 +40,8 @@ public class QuestionController {
 
     @Autowired
     private QuestionRepository questionRepository;
-    private String localCodePath="D:\\localCode\\";
-    private String localTestDataPath="D:\\localTest\\";
+    private String localCodePath="/web/oj/teacherCode/";
+    private String localTestDataPath=DockerRunCode.localTestDataPath;
 
 
     //增加一个题目

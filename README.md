@@ -1,5 +1,4 @@
 # OJ系统后端API
-
 - [OJ系统后端API](#oj系统后端api)
           - [报错信息表](#报错信息表)
     - [一.教师](#一教师)
@@ -41,7 +40,25 @@
       - [3.5获取题目列表](#35获取题目列表)
           - [注意](#注意-10)
           - [接口](#接口-11)
-
+      - [3.6增加或修改一个题目的测试数据](#36增加或修改一个题目的测试数据)
+          - [注意](#注意-11)
+          - [接口](#接口-12)
+          - [3.7获取某道题目的测试数据](#37获取某道题目的测试数据)
+          - [注意](#注意-12)
+          - [接口](#接口-13)
+    - [四.代码](#四代码)
+      - [4.1代码运行](#41代码运行)
+          - [注意](#注意-13)
+          - [接口](#接口-14)
+      - [4.2代码保存](#42代码保存)
+          - [注意](#注意-14)
+          - [接口](#接口-15)
+      - [4.3获取学生关于某一题的提交记录](#43获取学生关于某一题的提交记录)
+          - [注意](#注意-15)
+          - [接口](#接口-16)
+      - [4.4通过version版本号获取提交的代码](#44通过version版本号获取提交的代码)
+          - [注意](#注意-16)
+          - [接口](#接口-17)
 ###### 报错信息表
 
 | 错误码(code) | 说明                                          |
@@ -793,3 +810,329 @@ http://mengxun.online/api/oj/student/4a379f0a-28ae-4937-9fc4-c5366bb6cb76
 }
 ```
 
+#### 3.6增加或修改一个题目的测试数据
+
+###### 注意
+
+​	API中的id是这道题目的唯一标识id
+
+​	testdata中是json数组，json的两个键为input和output,值为字符串形式上传
+
+###### 接口
+
+[PUT] http://mengxun.online/api/oj/question/testdata/{id}
+
+例
+
+ http://mengxun.online/api/oj/question/testdata/a2c32a15-c0b3-40a4-b9a3-07956ab2d9ac 
+
+正确案例
+
+```json
+{
+    "testdata":[
+      {
+        "input":"1 2",
+        "output":"3"
+      },
+      {
+        "input":"1 3",
+        "output":"4"
+      },
+      {
+        "input":"1 3",
+        "output":"4"
+      }
+    ]
+}
+```
+
+返回结果
+
+```json
+{
+    "code": 0,
+    "msg": "更新题目测试数据成功",
+    "data": null
+}
+```
+
+错误案例
+
+```json
+{
+    
+}
+```
+
+返回结果
+
+```json
+{
+    "code": 40000,
+    "msg": "缺少testdata参数",
+    "data": null
+}
+```
+
+###### 3.7获取某道题目的测试数据
+
+###### 注意
+
+​	1.没有做身份校验，最好只用老师身份来请求
+
+​	2.API中的id是这道题目的唯一标识id
+
+###### 接口
+
+[GET] http://mengxun.online/api/oj/question/testdata/{id}
+
+例
+
+ http://mengxun.online/api/oj/question/testdata/a2c32a15-c0b3-40a4-b9a3-07956ab2d9ac 
+
+返回结果
+
+```json
+{
+    "code": 0,
+    "msg": "success",
+    "data": [
+        {
+            "output": "3",
+            "input": "1 2"
+        },
+        {
+            "output": "4",
+            "input": "1 3"
+        },
+        {
+            "output": "4",
+            "input": "1 3"
+        }
+    ]
+}
+```
+
+
+
+
+
+### 四.代码
+
+#### 4.1代码运行
+
+###### 注意
+
+​	1.API中的id是题目的id
+
+​	2.需要提交3个参数 uid:请求者的id,code:代码文件的base64编码，codetype:代码类型（目前只支持C语言）
+
+​	3.返回结果有四种：编译失败/运行时出错/答案错误/通过
+
+###### 接口
+
+[POST] http://mengxun.online/api/oj/run/{id}
+
+正确案例
+
+```json
+{
+    "uid":"a2c32a15-c0b3-40a4-b9a3-07956ab2d9ac",
+    		     "code":"I2luY2x1ZGU8c3RkaW8uaD4KCmludCBtYWluKCl7CiAgICBpbnQgYT0wLGI9MDsKICAgIHNjYW5mKCIlZCAlZCAlZCIsJmEsJmIpOwogICAgcHJpbnRmKCIlZCIsYStiKTsKICAgIHJldHVybiAwOwp9",
+    "codetype":"c"
+
+}
+```
+
+返回结果
+
+```json
+{
+    "code": 0,
+    "msg": "运行通过",
+    "data": "Accepted"
+}
+```
+
+错误案例
+
+```json
+{
+    "code":"I2luY2x1ZGU8c3RkaW8uaD4KCmludCBtYWluKCl7CiAgICBpbnQgYT0wLGI9MDsKICAgIHNjYW5mKCIlZCAlZCAlZCIsJmEsJmIpOwogICAgcHJpbnRmKCIlZCIsYStiKTsKICAgIHJldHVybiAwOwp9",
+    "codetype":"c"
+
+}
+```
+
+返回结果
+
+```json
+{
+    "code": 40000,
+    "msg": "没有提交操作人的id",
+    "data": null
+}
+```
+
+#### 4.2代码保存
+
+###### 注意
+
+​	1.API中的id是提交者的id(学生id)
+
+​	2.需要提交的参数为qid:题目的id,code:代码,codetype:代码类型,state:代码通过状态
+
+###### 接口
+
+[PUT] http://mengxun.online/api/oj/code/{id}
+
+例 http://mengxun.online/api/oj/code/4e59eb9b-910b-46f9-8bfb-62fd7927c5c5
+
+正确案例：
+
+```json
+{
+    "code":"I2luY2x1ZGU8c3RkaW8uaD4KCmludCBtYWluKCl7CiAgICBpbnQgYT0wLGI9MDsKICAgIHNjYW5mKCIlZCAlZCAlZCIsJmEsJmIpOwogICAgcHJpbnRmKCIlZCIsYStiKTsKICAgIHJldHVybiAwOwp9",
+    "codetype":"c",
+    "qid":"a2c32a15-c0b3-40a4-b9a3-07956ab2d9ac",
+    "state":"Accepted"
+}
+```
+
+返回结果
+
+```json
+{
+    "code": 0,
+    "msg": "success",
+    "data": null
+}
+```
+
+错误案例
+
+```json
+{
+    "code":"I2luY2x1ZGU8c3RkaW8uaD4KCmludCBtYWluKCl7CiAgICBpbnQgYT0wLGI9MDsKICAgIHNjYW5mKCIlZCAlZCAlZCIsJmEsJmIpOwogICAgcHJpbnRmKCIlZCIsYStiKTsKICAgIHJldHVybiAwOwp9",
+    "codetype":"c"
+}
+```
+
+#### 4.3获取学生关于某一题的提交记录
+
+###### 注意
+
+​	1.API中的id是提交者的id(学生id)
+
+​	2.需要提交的参数为qid:题目的id
+
+###### 接口
+
+[POST] http://mengxun.online/api/oj/code/{id}
+
+例
+
+ http://mengxun.online/api/oj/code/4e59eb9b-910b-46f9-8bfb-62fd7927c5c5
+
+正确案例
+
+```json
+{
+    "qid":"a2c32a15-c0b3-40a4-b9a3-07956ab2d9ac"
+}
+```
+
+返回结果
+
+```json
+{
+    "code": 0,
+    "msg": "success",
+    "data": {
+        "Versions": [
+            "12ae82f267f9e73196fb611d276021197238f12f",
+            "79308068a7250d847fcb38456940d49ac9199e3a"
+        ],
+        "ID": "4e59eb9b-910b-46f9-8bfb-62fd7927c5c5",
+        "QID": "a2c32a15-c0b3-40a4-b9a3-07956ab2d9ac"
+    }
+}
+```
+
+错误案例
+
+```json
+{
+}
+```
+
+返回结果
+
+```json
+{
+    "code": 40000,
+    "msg": "提交数据缺失",
+    "data": null
+}
+```
+
+#### 4.4通过version版本号获取提交的代码
+
+###### 注意
+
+​	1.API中的id是提交者的id(学生id),version为提交记录中的版本号
+
+​	2.需要提交的参数为qid:题目的id
+
+###### 接口
+
+[POST] http://mengxun.online/api/oj/code/{id}/{version}
+
+例
+
+ http://mengxun.online/api/oj/code/4e59eb9b-910b-46f9-8bfb-62fd7927c5c5/79308068a7250d847fcb38456940d49ac9199e3a 
+
+正确案例
+
+```json
+{
+    "qid":"a2c32a15-c0b3-40a4-b9a3-07956ab2d9ac"
+}
+```
+
+返回结果
+
+```json
+{
+    "code": 0,
+    "msg": "success",
+    "data": {
+        "Version": "79308068a7250d847fcb38456940d49ac9199e3a",
+        "ID": "4e59eb9b-910b-46f9-8bfb-62fd7927c5c5",
+        "Code": "I2luY2x1ZGU8c3RkaW8uaD4KCmludCBtYWluKCl7CiAgICBpbnQgYT0wLGI9MDsKICAgIHNjYW5mKCIlZCAlZCAlZCIsJmEsJmIpOwogICAgcHJpbnRmKCIlZCIsYStiKTsKICAgIHJldHVybiAwOwp9",
+        "Result": {
+            "CodeType": "c",
+            "AccessState": "Accepted"
+        }
+    }
+}
+```
+
+错误案例
+
+```json
+{
+    
+}
+```
+
+返回结果
+
+```json
+{
+    "code": 40000,
+    "msg": "提交数据缺失",
+    "data": null
+}
+```

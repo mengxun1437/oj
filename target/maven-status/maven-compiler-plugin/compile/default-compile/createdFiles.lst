@@ -9,6 +9,7 @@ online\mengxun\server\controller\QuestionController.class
 online\mengxun\server\controller\TeacherController.class
 online\mengxun\server\entity\Teacher.class
 online\mengxun\server\repository\QuestionRepository.class
+online\mengxun\server\controller\DockerRunCodeController.class
 online\mengxun\server\controller\CodeController.class
 online\mengxun\server\entity\Question.class
 online\mengxun\server\controller\GitController.class

@@ -26,7 +26,7 @@ import static online.mengxun.server.controller.GitController.*;
 @RequestMapping("/code")
 public class CodeController {
 
-    public static String repoPath="D:\\repo\\";
+    public static String repoPath="/web/oj/repo/";
 
     //提交代码
     @PutMapping("/{id}")
@@ -36,15 +36,17 @@ public class CodeController {
             Check check=new Check();
             if (check.noKey(jsonObject,"codetype")
                     ||check.noKey(jsonObject,"code")
-                    ||check.noKey(jsonObject,"qid")){
+                    ||check.noKey(jsonObject,"qid")
+                    ||check.noKey(jsonObject,"state")){
                 return Response.error("提交数据缺失");
             }
 
             String code=jsonObject.getString("code");
             String codetype=jsonObject.getString("codetype");
             String qid=jsonObject.getString("qid");
+            String state=jsonObject.getString("state");
 
-            if (check.emptyStr(code)||check.emptyStr(codetype)||check.emptyStr(qid)){
+            if (check.emptyStr(code)||check.emptyStr(codetype)||check.emptyStr(qid)||check.emptyStr(state)){
                 return Response.error("提交参数不能为空");
             }
 
@@ -77,7 +79,7 @@ public class CodeController {
 
             JSONObject jsonR=new JSONObject();
             jsonR.put("CodeType",codetype);
-            jsonR.put("AccessState","Pass");
+            jsonR.put("AccessState",state);
 
 
 
