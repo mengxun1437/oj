@@ -1,20 +1,13 @@
 package online.mengxun.server.controller;
 
-import ch.qos.logback.core.pattern.util.RegularEscapeUtil;
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import online.mengxun.server.response.Check;
 import online.mengxun.server.response.Response;
-import org.eclipse.jgit.transport.InternalHttpServerGlue;
 import org.springframework.web.bind.annotation.*;
-import sun.security.krb5.internal.crypto.dk.DkCrypto;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.print.Doc;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
-import java.text.BreakIterator;
 import java.util.Base64;
 
 import static org.apache.tomcat.util.http.fileupload.FileUtils.deleteDirectory;
@@ -78,11 +71,14 @@ public class DockerRunCodeController {
                 return Response.error("没有此题或者此题没有测试数据");
             }
 
-            DockerRunCode.MoveInputfilesToRunspace(DockerRunCode.localTestDataPath+qid+File.separator+"in",DockerRunCode.tmplocalRunPath+uid);
+            DockerRunCode.MoveInputfilesToRunspace(DockerRunCode.localTestDataPath+qid+File.separator+"in", DockerRunCode.tmplocalRunPath+uid);
 
-
-            Integer status=DockerRunCode.RunCode(DockerRunCode.tmplocalRunPath+uid);
-            System.out.println(status);
+            Integer status=-1;
+            //运行三次解决延迟，后续改进
+            for (int i=0;i<3;i++){
+                status= DockerRunCode.RunCode(DockerRunCode.tmplocalRunPath+uid+File.separator,uid);
+                System.out.println(status);
+            }
 
             switch (status){
                 case 1:
@@ -90,7 +86,7 @@ public class DockerRunCodeController {
                 case 2:
                     return Response.success("代码运行时出错","RunError");
                 case 3:
-                    Integer run_code=DockerRunCode.getCodeRunRes(DockerRunCode.localTestDataPath+qid+File.separator+"out",DockerRunCode.tmplocalRunPath+uid+File.separator+"out");
+                    Integer run_code= DockerRunCode.getCodeRunRes(DockerRunCode.localTestDataPath+qid+File.separator+"out", DockerRunCode.tmplocalRunPath+uid+File.separator+"out");
                     System.out.println(run_code);
                     switch (run_code){
                         case 2:

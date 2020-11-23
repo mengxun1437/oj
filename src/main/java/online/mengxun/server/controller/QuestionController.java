@@ -1,26 +1,12 @@
 package online.mengxun.server.controller;
 
-import ch.qos.logback.core.pattern.util.RegularEscapeUtil;
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.fasterxml.jackson.annotation.JsonAlias;
-import com.sun.org.apache.bcel.internal.generic.ACONST_NULL;
-import com.sun.scenario.effect.impl.state.AccessHelper;
 import online.mengxun.server.entity.Question;
-import online.mengxun.server.entity.Teacher;
 import online.mengxun.server.repository.QuestionRepository;
-import online.mengxun.server.repository.TeacherRepository;
 import online.mengxun.server.response.Check;
 import online.mengxun.server.response.Response;
-import online.mengxun.server.utils.FileOP;
-import org.aspectj.apache.bcel.classfile.Code;
-import org.bouncycastle.crypto.engines.BlowfishEngine;
-import org.bouncycastle.est.CACertsResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import org.springframework.web.bind.annotation.*;
 
 import java.nio.charset.StandardCharsets;
@@ -41,7 +27,7 @@ public class QuestionController {
     @Autowired
     private QuestionRepository questionRepository;
     private String localCodePath="/web/oj/teacherCode/";
-    private String localTestDataPath=DockerRunCode.localTestDataPath;
+    private String localTestDataPath= DockerRunCode.localTestDataPath;
 
 
     //增加一个题目

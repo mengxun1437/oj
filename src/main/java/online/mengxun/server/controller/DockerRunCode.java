@@ -57,7 +57,7 @@ public class DockerRunCode {
         }
 
     }
-    public static Integer RunCode(String targetpath){
+    public static Integer RunCode(String targetpath,String container_name){
         try{
           //如果没有输出文件夹的话要创建
             if(!new File(targetpath+File.separator+"out").exists()){
@@ -82,18 +82,24 @@ public class DockerRunCode {
                 return CompileErrorCode;
             }
 
-            File file=new File(targetpath+File.separator+"in");
+//            File file=new File(targetpath+File.separator+"in");
+//
+//
+//            for(File f:file.listFiles()){
+//                String filename=f.getName();
+//                System.out.println(filename);
+//                String fileOut=filename.split("\\.")[0]+".out";
+//                System.out.println(fileOut);
+//                String command_inout=targetpath+File.separator+"code <"+targetpath+File.separator+"in"+File.separator+filename+" >"+targetpath+File.separator+"out"+File.separator+fileOut;
+//                CommandShell(command_inout);
+//                System.out.println(command_inout);
+//            }
+            //在容器中运行代码
+            Docker.CreateContainer(container_name);
+            Docker.CopyFileIntoContainer(targetpath+"in",targetpath+"code",container_name);
+            Docker.RunCodeInContainer(container_name);
+            Docker.CopyFileFromContainer(container_name,targetpath);
 
-
-            for(File f:file.listFiles()){
-                String filename=f.getName();
-                System.out.println(filename);
-                String fileOut=filename.split("\\.")[0]+".out";
-                System.out.println(fileOut);
-                String command_inout=targetpath+File.separator+"code <"+targetpath+File.separator+"in"+File.separator+filename+" >"+targetpath+File.separator+"out"+File.separator+fileOut;
-                CommandShell(command_inout);
-                System.out.println(command_inout);
-            }
             return RunSuccessCode;
         }catch (Exception e){
             e.printStackTrace();
@@ -103,6 +109,7 @@ public class DockerRunCode {
 
 
     public static Integer getCodeRunRes(String outpath,String targetpath){
+
         try{
 
             File outFile=new File(outpath);
