@@ -729,7 +729,7 @@ http://mengxun.online/api/oj/student/4a379f0a-28ae-4937-9fc4-c5366bb6cb76
 
 ###### 接口
 
-[POST]http://mengxun.online/api/oj/quesition/list
+[POST]http://mengxun.online/api/oj/question/list
 
 正确案例
 
