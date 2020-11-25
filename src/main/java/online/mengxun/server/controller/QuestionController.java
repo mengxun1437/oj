@@ -3,6 +3,7 @@ package online.mengxun.server.controller;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import online.mengxun.server.entity.Question;
+import online.mengxun.server.entity.Teacher;
 import online.mengxun.server.repository.QuestionRepository;
 import online.mengxun.server.response.Check;
 import online.mengxun.server.response.Response;

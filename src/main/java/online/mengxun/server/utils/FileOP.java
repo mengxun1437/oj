@@ -1,36 +1,69 @@
 package online.mengxun.server.utils;
 
-import java.io.File;
+import com.alibaba.fastjson.JSONObject;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import java.io.*;
+
+import static org.apache.tomcat.util.http.fileupload.FileUtils.deleteDirectory;
 
 public class FileOP {
 
-    //删除文件夹
-    public static void delFolder(String folderPath) {
-        try {
-            delAllFile(folderPath); //删除完里面所有内容
-            String filePath = folderPath;
-            filePath = filePath.toString();
-            java.io.File myFilePath = new java.io.File(filePath);
-            myFilePath.delete(); //删除空文件夹
-        } catch (Exception e) {
+    public static boolean SaveFileJson(String file_path,String file_name, JSONObject jsonObject){
+        try{
+            File file=new File(file_path);
+            if (!file.exists()){
+                file.mkdirs();
+            }
+
+            byte[] bytes=jsonObject.toJSONString().getBytes();
+            FileOutputStream outputStream = new FileOutputStream(new File(file_path+file_name));
+            outputStream.write(bytes);
+            outputStream.close();
+
+            return true;
+
+
+        }catch (Exception e){
             e.printStackTrace();
+            return false;
         }
     }
 
-    public static void delAllFile(String path) {
-        File file = new File(path);
-        if (!file.exists()) {
-            file.mkdirs();
-        }
-        if (!file.isDirectory()) {
-            return;
-        }
-        String[] tempList = file.list();
-        for (String s:tempList) {
-            File temp=new File(path+s);
-            if (temp!=null&&temp.isFile()){
-                temp.delete();
+    public static JSONObject GetJSONFromFile(String file_path,String file_name){
+        try{
+            File file = new File(file_path+file_name);
+            FileInputStream in = new FileInputStream(file);
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in));
+            String jsonStr = "";
+            String tmp=null;
+
+            while ((tmp = bufferedReader.readLine()) != null) {
+                jsonStr+=tmp;
             }
+
+            bufferedReader.close();
+
+            if (in!=null){
+                in.close();
+            }
+
+            return JSONObject.parseObject(jsonStr);
+
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static void RemoveFile(String file_path,String file_name){
+        try{
+            File file=new File(file_path+file_name);
+            if (file.exists()&&file.isFile()){
+                file.delete();
+            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
     }
 }
