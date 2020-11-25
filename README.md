@@ -1434,6 +1434,8 @@ http://mengxun.online/api/oj/student/4a379f0a-28ae-4937-9fc4-c5366bb6cb76
 ​	1.api中的id是考试的id
 
 ​	2.需要提交的参数：identity(只能选择student或者teacher，指定获取者的身份)
+        
+        3.返回的State表示考试进行状态，0表示未开始，1表示进行中，2表示已结束
 
 ###### 接口
 
