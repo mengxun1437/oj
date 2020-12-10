@@ -38,7 +38,7 @@ public class CodeController {
                     ||check.noKey(jsonObject,"code")
                     ||check.noKey(jsonObject,"qid")
                     ||check.noKey(jsonObject,"state")
-                    ||check.noKey(jsonObject," memory")
+                    ||check.noKey(jsonObject,"memory")
                     ||check.noKey(jsonObject,"time")){
                 return Response.error("提交数据缺失");
             }

@@ -1012,7 +1012,7 @@ http://mengxun.online/api/oj/student/4a379f0a-28ae-4937-9fc4-c5366bb6cb76
 
 ​	1.API中的id是提交者的id(学生id)
 
-​	2.需要提交的参数为qid:题目的id,code:代码,codetype:代码类型,state:代码通过状态,memory:代码运行内存，time:代码运行时间
+​	2.需要提交的参数为qid:题目的id,code:代码,codetype:代码类型,state:代码通过状态,memory:代码运行内存(0)，time:代码运行时间(0)
 
 ###### 接口
 
