@@ -3,12 +3,15 @@ package online.mengxun.server.controller;
 import com.alibaba.fastjson.JSONObject;
 import online.mengxun.server.response.Check;
 import online.mengxun.server.response.Response;
+import online.mengxun.server.utils.FileOP;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.util.Base64;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.apache.tomcat.util.http.fileupload.FileUtils.deleteDirectory;
 
@@ -74,27 +77,41 @@ public class DockerRunCodeController {
             DockerRunCode.MoveInputfilesToRunspace(DockerRunCode.localTestDataPath+qid+File.separator+"in", DockerRunCode.tmplocalRunPath+uid);
 
             Integer status=-1;
-            //运行三次解决延迟，后续改进
-            for (int i=0;i<3;i++){
-                status= DockerRunCode.RunCode(DockerRunCode.tmplocalRunPath+uid+File.separator,uid);
+            //运行2次解决延迟，后续改进
+            Thread.sleep(5000);
+            for (int i=0;i<2;i++) {
+                status = DockerRunCode.RunCode(DockerRunCode.tmplocalRunPath + uid + File.separator, uid);
                 System.out.println(status);
             }
+            JSONObject res_json=new JSONObject();
 
             switch (status){
                 case 1:
-                    return Response.success("代码编译错误","CompileError");
+                    res_json.put("Status","CompileError");
+                    return Response.success("代码编译错误",res_json);
                 case 2:
-                    return Response.success("代码运行时出错","RunError");
+                    res_json.put("Status","RunError");
+                    return Response.success("代码运行时出错",res_json);
                 case 3:
                     Integer run_code= DockerRunCode.getCodeRunRes(DockerRunCode.localTestDataPath+qid+File.separator+"out", DockerRunCode.tmplocalRunPath+uid+File.separator+"out");
                     System.out.println(run_code);
+                    Map map= FileOP.getMapperJsonFromFile(DockerRunCode.tmplocalRunPath+uid+File.separator,"result");
+                    if (map.equals(null)){
+                        res_json.put("Status","RunResultLost");
+                        return Response.success("运行结果缺失",res_json);
+                    }
                     switch (run_code){
                         case 2:
-                            return Response.success("代码运行时出错","RunError");
+                            res_json.put("Status","RunError");
+                            return Response.success("代码运行时出错",res_json);
                         case 5:
-                            return Response.success("运行答案错误","WrongAnswer");
+                            res_json.put("Status","WrongAnswer");
+                            return Response.success("运行答案错误",res_json);
                         case 4:
-                            return Response.success("运行通过","Accepted");
+                            res_json.put("Status","Accepted");
+                            res_json.put("Time",map.get("time"));
+                            res_json.put("Memory",map.get("memory"));
+                            return Response.success("运行通过",res_json);
                         default:
                             return Response.error();
                     }

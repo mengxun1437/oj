@@ -1,68 +1,105 @@
 package online.mengxun.server.utils;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.io.*;
-
-import static org.apache.tomcat.util.http.fileupload.FileUtils.deleteDirectory;
+import java.util.HashMap;
+import java.util.Map;
 
 public class FileOP {
 
-    public static boolean SaveFileJson(String file_path,String file_name, JSONObject jsonObject){
-        try{
-            File file=new File(file_path);
-            if (!file.exists()){
+    public static boolean SaveFileJson(String file_path, String file_name, JSONObject jsonObject) {
+        try {
+            File file = new File(file_path);
+            if (!file.exists()) {
                 file.mkdirs();
             }
 
-            byte[] bytes=jsonObject.toJSONString().getBytes();
-            FileOutputStream outputStream = new FileOutputStream(new File(file_path+file_name));
+            byte[] bytes = jsonObject.toJSONString().getBytes();
+            FileOutputStream outputStream = new FileOutputStream(new File(file_path + file_name));
             outputStream.write(bytes);
             outputStream.close();
 
             return true;
 
 
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
     }
 
-    public static JSONObject GetJSONFromFile(String file_path,String file_name){
-        try{
-            File file = new File(file_path+file_name);
+
+    public static Map getMapperJsonFromFile(String file_path, String file_name) {
+        try {
+
+            File file = new File(file_path + file_name);
             FileInputStream in = new FileInputStream(file);
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in));
             String jsonStr = "";
-            String tmp=null;
+            String tmp = null;
 
             while ((tmp = bufferedReader.readLine()) != null) {
-                jsonStr+=tmp;
+                jsonStr += tmp;
             }
 
             bufferedReader.close();
 
-            if (in!=null){
+            if (in != null) {
                 in.close();
             }
 
-            return JSONObject.parseObject(jsonStr);
+            String str =jsonStr.substring(1, jsonStr.length() - 1);
+            String[] strs = str.split(",");
+            Map map = new HashMap();
+            for (String string : strs) {
+                String key = string.split("=")[0].trim();
+                String value = string.split("=")[1];
+                map.put(key, value);
+            }
 
-        }catch (Exception e){
+            return map;
+
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
     }
 
-    public static void RemoveFile(String file_path,String file_name){
-        try{
-            File file=new File(file_path+file_name);
-            if (file.exists()&&file.isFile()){
+    public static JSONObject GetJSONFromFile(String file_path, String file_name) {
+        try {
+            File file = new File(file_path + file_name);
+            FileInputStream in = new FileInputStream(file);
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in));
+            String jsonStr = "";
+            String tmp = null;
+
+            while ((tmp = bufferedReader.readLine()) != null) {
+                jsonStr += tmp;
+            }
+
+            bufferedReader.close();
+
+            if (in != null) {
+                in.close();
+            }
+
+            return JSONObject.parseObject(jsonStr);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static void RemoveFile(String file_path, String file_name) {
+        try {
+            File file = new File(file_path + file_name);
+            if (file.exists() && file.isFile()) {
                 file.delete();
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

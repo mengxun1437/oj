@@ -37,7 +37,9 @@ public class CodeController {
             if (check.noKey(jsonObject,"codetype")
                     ||check.noKey(jsonObject,"code")
                     ||check.noKey(jsonObject,"qid")
-                    ||check.noKey(jsonObject,"state")){
+                    ||check.noKey(jsonObject,"state")
+                    ||check.noKey(jsonObject," memory")
+                    ||check.noKey(jsonObject,"time")){
                 return Response.error("提交数据缺失");
             }
 
@@ -45,8 +47,16 @@ public class CodeController {
             String codetype=jsonObject.getString("codetype");
             String qid=jsonObject.getString("qid");
             String state=jsonObject.getString("state");
+            String memory=jsonObject.getString("memory");
+            String time=jsonObject.getString("time");
 
-            if (check.emptyStr(code)||check.emptyStr(codetype)||check.emptyStr(qid)||check.emptyStr(state)){
+
+            if (check.emptyStr(code)
+                    ||check.emptyStr(codetype)
+                    ||check.emptyStr(qid)
+                    ||check.emptyStr(state)
+                    ||check.emptyStr(memory)
+                    ||check.emptyStr(time)){
                 return Response.error("提交参数不能为空");
             }
 
@@ -80,7 +90,8 @@ public class CodeController {
             JSONObject jsonR=new JSONObject();
             jsonR.put("CodeType",codetype);
             jsonR.put("AccessState",state);
-
+            jsonR.put("Memory",memory);
+            jsonR.put("Time",time);
 
 
 

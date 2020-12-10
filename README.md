@@ -966,7 +966,7 @@ http://mengxun.online/api/oj/student/4a379f0a-28ae-4937-9fc4-c5366bb6cb76
 ```json
 {
     "uid":"a2c32a15-c0b3-40a4-b9a3-07956ab2d9ac",
-    		     "code":"I2luY2x1ZGU8c3RkaW8uaD4KCmludCBtYWluKCl7CiAgICBpbnQgYT0wLGI9MDsKICAgIHNjYW5mKCIlZCAlZCAlZCIsJmEsJmIpOwogICAgcHJpbnRmKCIlZCIsYStiKTsKICAgIHJldHVybiAwOwp9",
+    "code":"I2luY2x1ZGU8c3RkaW8uaD4KCmludCBtYWluKCl7CiAgICBpbnQgYT0wLGI9MDsKICAgIHNjYW5mKCIlZCAlZCAlZCIsJmEsJmIpOwogICAgcHJpbnRmKCIlZCIsYStiKTsKICAgIHJldHVybiAwOwp9",
     "codetype":"c"
 
 }
@@ -978,7 +978,11 @@ http://mengxun.online/api/oj/student/4a379f0a-28ae-4937-9fc4-c5366bb6cb76
 {
     "code": 0,
     "msg": "运行通过",
-    "data": "Accepted"
+    "data": {
+         "Status": "Accepted",
+         "Memory": "192392",
+         "Time": "15"
+    }
 }
 ```
 
@@ -1008,7 +1012,7 @@ http://mengxun.online/api/oj/student/4a379f0a-28ae-4937-9fc4-c5366bb6cb76
 
 ​	1.API中的id是提交者的id(学生id)
 
-​	2.需要提交的参数为qid:题目的id,code:代码,codetype:代码类型,state:代码通过状态
+​	2.需要提交的参数为qid:题目的id,code:代码,codetype:代码类型,state:代码通过状态,memory:代码运行内存，time:代码运行时间
 
 ###### 接口
 
@@ -1023,7 +1027,9 @@ http://mengxun.online/api/oj/student/4a379f0a-28ae-4937-9fc4-c5366bb6cb76
     "code":"I2luY2x1ZGU8c3RkaW8uaD4KCmludCBtYWluKCl7CiAgICBpbnQgYT0wLGI9MDsKICAgIHNjYW5mKCIlZCAlZCAlZCIsJmEsJmIpOwogICAgcHJpbnRmKCIlZCIsYStiKTsKICAgIHJldHVybiAwOwp9",
     "codetype":"c",
     "qid":"a2c32a15-c0b3-40a4-b9a3-07956ab2d9ac",
-    "state":"Accepted"
+    "state":"Accepted",
+    "memory": "10000",
+    "time": "12"
 }
 ```
 
@@ -1140,7 +1146,9 @@ http://mengxun.online/api/oj/student/4a379f0a-28ae-4937-9fc4-c5366bb6cb76
         "Code": "I2luY2x1ZGU8c3RkaW8uaD4KCmludCBtYWluKCl7CiAgICBpbnQgYT0wLGI9MDsKICAgIHNjYW5mKCIlZCAlZCAlZCIsJmEsJmIpOwogICAgcHJpbnRmKCIlZCIsYStiKTsKICAgIHJldHVybiAwOwp9",
         "Result": {
             "CodeType": "c",
-            "AccessState": "Accepted"
+            "AccessState": "Accepted",
+            "Memory": "1000",
+            "Time": "12"
         }
     }
 }

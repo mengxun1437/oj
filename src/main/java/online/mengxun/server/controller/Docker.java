@@ -33,7 +33,10 @@ public class Docker {
     //将out文件从docker运行完以后拷贝出来，但是这个地方存在异步问题，正在解决
     public static void CopyFileFromContainer(String container_name,String outFilePath){
         String command="docker cp "+container_name+":/usr/local/oj/out "+ outFilePath;
+        String command_result="docker cp "+container_name+":/usr/local/oj/result " +outFilePath;
         DockerRunCode.CommandShell(command);
+        DockerRunCode.CommandShell(command_result);
         System.out.println(command);
+        System.out.println(command_result);
     }
 }
