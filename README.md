@@ -957,6 +957,8 @@ http://mengxun.online/api/oj/student/4a379f0a-28ae-4937-9fc4-c5366bb6cb76
 
 ​	3.返回结果有四种：编译失败/运行时出错/答案错误/通过
 
+​	4.返回的参数:memory:内存（B），time：运行时间（ms），profiller:运行的profiler文件，含有函数调用信息，需要base64解码
+
 ###### 接口
 
 [POST] http://mengxun.online/api/oj/run/{id}
@@ -980,6 +982,7 @@ http://mengxun.online/api/oj/student/4a379f0a-28ae-4937-9fc4-c5366bb6cb76
     "msg": "运行通过",
     "data": {
          "Status": "Accepted",
+         "Profiler": "dahajsdhasd",
          "Memory": "192392",
          "Time": "15"
     }
@@ -1442,7 +1445,7 @@ http://mengxun.online/api/oj/student/4a379f0a-28ae-4937-9fc4-c5366bb6cb76
 ​	1.api中的id是考试的id
 
 ​	2.需要提交的参数：identity(只能选择student或者teacher，指定获取者的身份)
-    3.返回的State表示考试进行状态，0表示未开始，1表示进行中，2表示已结束
+​    3.返回的State表示考试进行状态，0表示未开始，1表示进行中，2表示已结束
 
 ###### 接口
 
