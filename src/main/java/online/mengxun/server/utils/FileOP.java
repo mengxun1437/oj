@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
 import java.io.*;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -101,6 +102,27 @@ public class FileOP {
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+
+    public static String GetBase64FromFile(String file_path,String file_name){
+        try{
+            File file = new File(file_path+file_name);
+            FileInputStream in = new FileInputStream(file_path+file_name);
+            byte[] bytes = new byte[(int) file.length()];
+            in.read(bytes);
+            String base64 = new String(Base64.getEncoder().encode(bytes), "UTF-8");
+
+
+            if (in!=null){
+                in.close();
+            }
+
+            return base64;
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
         }
     }
 }

@@ -77,12 +77,12 @@ public class DockerRunCodeController {
             DockerRunCode.MoveInputfilesToRunspace(DockerRunCode.localTestDataPath+qid+File.separator+"in", DockerRunCode.tmplocalRunPath+uid);
 
             Integer status=-1;
-            //运行2次解决延迟，后续改进
+
             Thread.sleep(5000);
-            for (int i=0;i<2;i++) {
+            for(int i=0;i<2;i++){
                 status = DockerRunCode.RunCode(DockerRunCode.tmplocalRunPath + uid + File.separator, uid);
-                System.out.println(status);
             }
+
             JSONObject res_json=new JSONObject();
 
             switch (status){
@@ -108,9 +108,11 @@ public class DockerRunCodeController {
                             res_json.put("Status","WrongAnswer");
                             return Response.success("运行答案错误",res_json);
                         case 4:
+                            Docker.CopyFileFromContainer(uid,DockerRunCode.tmplocalRunPath + uid + File.separator);
                             res_json.put("Status","Accepted");
                             res_json.put("Time",map.get("time"));
                             res_json.put("Memory",map.get("memory"));
+                            res_json.put("Profiler",FileOP.GetBase64FromFile(DockerRunCode.tmplocalRunPath+uid+File.separator,"profiler"));
                             return Response.success("运行通过",res_json);
                         default:
                             return Response.error();

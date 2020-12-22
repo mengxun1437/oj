@@ -2,6 +2,7 @@ package online.mengxun.server.controller;
 
 public class Docker {
 
+
     //启动一个名字为user的容器
     public static void CreateContainer(String container_name){
         String command="docker run -itd --name "+container_name+" oj";
@@ -34,9 +35,12 @@ public class Docker {
     public static void CopyFileFromContainer(String container_name,String outFilePath){
         String command="docker cp "+container_name+":/usr/local/oj/out "+ outFilePath;
         String command_result="docker cp "+container_name+":/usr/local/oj/result " +outFilePath;
+        String command_profiler="docker cp "+container_name+":/usr/local/oj/profiler " +outFilePath;
         DockerRunCode.CommandShell(command);
         DockerRunCode.CommandShell(command_result);
+        DockerRunCode.CommandShell(command_profiler);
         System.out.println(command);
         System.out.println(command_result);
+        System.out.println(command_profiler);
     }
 }

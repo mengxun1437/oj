@@ -96,7 +96,7 @@ public class DockerRunCode {
 //            }
             //在容器中运行代码
             Docker.CreateContainer(container_name);
-            Docker.CopyFileIntoContainer(targetpath+"in",targetpath+"code",container_name);
+            Docker.CopyFileIntoContainer(targetpath+"in",targetpath+"code.c",container_name);
             Docker.RunCodeInContainer(container_name);
             Docker.CopyFileFromContainer(container_name,targetpath);
 
